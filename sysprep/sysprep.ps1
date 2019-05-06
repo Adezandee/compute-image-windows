@@ -135,6 +135,7 @@ if (-not($ans_file)) {
 try {
   # Delete the startup task so it doesn't fire before sysprep completes.
   Invoke-ExternalCommand schtasks /delete /tn GCEStartup /f -ErrorAction SilentlyContinue
+  Invoke-ExternalCommand schtasks /delete /tn GCEStartupExtra /f -ErrorAction SilentlyContinue
 
   # Do some clean up.
   Clear-TempFolders

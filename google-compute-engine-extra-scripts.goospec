@@ -1,0 +1,29 @@
+{
+  "name": "google-compute-engine-extra-scripts",
+  "version": "1.0.0@1",
+  "arch": "x86_64",
+  "authors": "PlayPlay",
+  "license": "http://www.apache.org/licenses/LICENSE-2.0",
+  "description": "Google Compute Engine extra scripts",
+  "files": {
+    "extra_scripts": "<ProgramFiles>/Google/Compute Engine/extra_scripts"
+  },
+ "install": {
+    "path": "extra_scripts_install.ps1"
+  },
+  "uninstall": {
+    "path": "extra_scripts_uninstall.ps1"
+  },
+  "releaseNotes": [],
+  "sources": [{
+      "include": [
+        "extra_scripts/startup_extra_scripts.cmd",
+        "extra_scripts/startup_extra_scripts.ps1",
+        "extra_scripts_install.ps1",
+        "extra_scripts_uninstall.ps1"
+      ]
+  }],
+  "pkgDependencies": {
+    "google-compute-engine-powershell": "1.1.1@4"
+  }
+}

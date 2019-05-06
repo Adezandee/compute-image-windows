@@ -245,6 +245,22 @@ function Create-GCEStartup {
   $folder.RegisterTaskDefinition('GCEStartup',$task,6,'System',$null,5) | Out-Null
 }
 
+function Create-GCEStartupExtra {
+  $startup_extra_scripts = "$script:gce_install_dir\extra_scripts\startup_extra_scripts.cmd"
+
+  $service = New-Object -ComObject("Schedule.Service")
+  $service.Connect()
+  $task = $service.NewTask(0)
+  $task.Settings.Enabled = $true
+  $task.Settings.AllowDemandStart = $true
+  $task.Settings.Priority = 5
+  $action = $task.Actions.Create(0)
+  $action.Path = "`"$startup_extra_scripts`""
+  $trigger = $task.Triggers.Create(8)
+  $folder = $service.GetFolder('\')
+  $folder.RegisterTaskDefinition('GCEStartupExtra',$task,6,'System',$null,5) | Out-Null
+}
+
 # Check if COM1 exists.
 if (-not ($global:write_to_serial)) {
   Write-Log 'COM1 does not exist on this machine. Logs will not be written to GCE console.'
@@ -282,6 +298,11 @@ else {
   $activate_job = Start-Job -FilePath $script:activate_instance_script_loc
   Enable-RemoteDesktop
   Configure-WinRM
+
+  # Schedule extra startup script.
+  Write-Log 'Running extra startup script.'
+  Create-GCEStartupExtra
+  Invoke-ExternalCommand schtasks /run /tn GCEStartupExtra
 
   # Schedule startup script.
   Write-Log 'Running startup scripts from metadata server.'
